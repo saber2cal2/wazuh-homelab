@@ -1,0 +1,21 @@
+<decoder name="clamav-scan">
+  <prematch>FOUND$</prematch>
+</decoder>
+
+<decoder name="clamav-scan-found">
+  <parent>clamav-scan</parent>
+  <regex>^(\S+): (\S+) FOUND$</regex>
+  <order>clamav.file, clamav.signature</order>
+</decoder>
+
+<decoder name="clamav-infected">
+  <prematch>^Infected files: </prematch>
+  <regex offset="after_prematch">(\d+)</regex>
+  <order>clamav.infected</order>
+</decoder>
+
+<decoder name="clamav-scanned">
+  <prematch>^Scanned files: </prematch>
+  <regex offset="after_prematch">(\d+)</regex>
+  <order>clamav.scanned</order>
+</decoder>

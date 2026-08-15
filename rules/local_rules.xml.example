@@ -1,0 +1,56 @@
+<!-- Local rules -->
+
+<group name="local,watched_accounts,">
+  <rule id="100010" level="10">
+    <if_sid>5715</if_sid>
+    <match>WATCHED_USER_1|WATCHED_USER_2|WATCHED_USER_3</match>
+    <description>WATCHED ACCOUNT: SSH login by monitored user</description>
+    <group>authentication_success,watched_account,</group>
+  </rule>
+  <rule id="100011" level="10">
+    <if_sid>5716</if_sid>
+    <match>WATCHED_USER_1|WATCHED_USER_2|WATCHED_USER_3</match>
+    <description>WATCHED ACCOUNT: Failed SSH login attempt for monitored user</description>
+    <group>authentication_failed,watched_account,</group>
+  </rule>
+  <rule id="100012" level="10">
+    <if_sid>5402</if_sid>
+    <match>WATCHED_USER_1|WATCHED_USER_3</match>
+    <description>WATCHED ACCOUNT: sudo command executed by monitored user</description>
+    <group>sudo,watched_account,</group>
+  </rule>
+  <rule id="100013" level="12">
+    <if_sid>5401</if_sid>
+    <match>WATCHED_USER_1|WATCHED_USER_2|WATCHED_USER_3</match>
+    <description>WATCHED ACCOUNT: FAILED sudo attempt by monitored user</description>
+    <group>sudo,watched_account,</group>
+  </rule>
+</group>
+
+<group name="clamav,">
+  <rule id="100100" level="0">
+    <decoded_as>clamav-scan</decoded_as>
+    <description>ClamAV scan event</description>
+  </rule>
+  <rule id="100101" level="12">
+    <if_sid>100100</if_sid>
+    <field name="clamav.signature">\.+</field>
+    <description>ClamAV: malware detected in $(clamav.file)</description>
+    <group>malware,virus_detected,</group>
+  </rule>
+  <rule id="100104" level="0">
+    <decoded_as>clamav-infected</decoded_as>
+    <description>ClamAV scan summary event</description>
+  </rule>
+  <rule id="100102" level="3">
+    <if_sid>100104</if_sid>
+    <field name="clamav.infected">^0$</field>
+    <description>ClamAV: scan completed clean, 0 infected files</description>
+  </rule>
+  <rule id="100103" level="10">
+    <if_sid>100104</if_sid>
+    <field name="clamav.infected" negate="yes">^0$</field>
+    <description>ClamAV: scan summary reports infected files present</description>
+    <group>malware,</group>
+  </rule>
+</group>
