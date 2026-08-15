@@ -1,0 +1,8 @@
+# Never commit secrets or environment-specific values
+*.pass
+*.env
+*secret*
+*token*
+authd.pass
+# Local notes
+notes-private.md
